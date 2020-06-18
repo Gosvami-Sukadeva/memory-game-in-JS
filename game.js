@@ -14,7 +14,7 @@ const cardsColor = [
   "cadetblue",
   "cadetblue",
   "violet",
-  "violeet",
+  "violet",
   "lightgreen",
   "lightgreen",
 ];
@@ -33,6 +33,9 @@ let gameResult = 0;
 const clickCard = function () {
   // mini gra dwa kliknięcia
   activeCard = this;
+
+  if (activeCard === activeCards[0]) return;
+
   activeCard.classList.remove("hidden");
   // czy to 1 kliknięcie
   if (activeCards.length === 0) {
@@ -51,21 +54,23 @@ const clickCard = function () {
     setTimeout(function () {
       if (activeCards[0].className === activeCards[1].className) {
         console.log("wygrana");
-        activeCards.forEach((card) => {
-          card.classList.add("off");
-        });
+        activeCards.forEach((card) => card.classList.add("off"));
+        gameResult++;
+        cards = cards.filter((card) => !card.classList.contains("off"));
+        if (gameResult === gamePairs) {
+          const endTime = new Date().getTime();
+          const gameTime = (endTime - startTime) / 1000;
+          alert(`udało się! Twój wynik to : ${gameTime}`);
+          location.reload();
+        }
       } else {
         console.log("przegrana");
-        activeCards.forEach((card) => {
-          card.classList.add("hidden");
-        });
+        activeCards.forEach((card) => card.classList.add("hidden"));
       }
       activeCard = "";
       activeCards.length = 0;
-      cards.forEach((card) => {
-        card.addEventListener("click", clickCard);
-      });
-    }, 1000);
+      cards.forEach((card) => card.addEventListener("click", clickCard));
+    }, 500);
   }
   //jeśli drugie to zablokować na czas kliknięcia
   //jeśli drugie to czy wygrana czy przegrana, jeśli wygrana to sprawdzenie czy koniec gry
